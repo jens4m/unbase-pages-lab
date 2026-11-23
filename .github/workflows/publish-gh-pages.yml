@@ -1,0 +1,32 @@
+name: Publish to gh-pages
+
+# The third Pages shape: build, then push the built files to the gh-pages branch, which Pages
+# serves from (source: branch gh-pages). Only does anything while Pages is set to that branch.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gh-pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build _site
+        run: |
+          mkdir -p _site
+          cp -r *.html sub _private _site/
+          sed -i "s|__API_URL__|${{ vars.API_URL }}|g" _site/index.html
+          sed -i "s|__SHA__|${{ github.sha }}|g" _site/index.html
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          publish_branch: gh-pages
