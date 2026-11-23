@@ -1,10 +1,9 @@
 name: Publish to gh-pages
 
 # The third Pages shape: build, then push the built files to the gh-pages branch, which Pages
-# serves from (source: branch gh-pages). Only does anything while Pages is set to that branch.
+# serves from (source: branch gh-pages). Run by hand only: Pages serves from the workflow
+# source (deploy.yml) now, so this is kept to measure the gh-pages shape again.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
